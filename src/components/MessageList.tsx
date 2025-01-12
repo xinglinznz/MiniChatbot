@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Message } from '../types'
+import React from 'react'
 
 interface MessageListProps {
   messages: Message[] // Array of message objectives to display

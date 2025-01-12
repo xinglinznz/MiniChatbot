@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from 'react'
 
 //Props interface for the MessageInput component

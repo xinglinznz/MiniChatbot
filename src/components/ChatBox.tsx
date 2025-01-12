@@ -1,11 +1,12 @@
+// src/components/ChatBox.tsx
 import { useState, useEffect } from 'react'
 import MessageInput from './MessageInput'
 import MessageList from './MessageList'
 import { Message } from '../types'
 import { sendToDialogflow } from '../services/dialogflow'
+import React from 'react'
 
-// Test-friendly limits
-const MAX_MESSAGES = 10 
+const MAX_MESSAGES = 10  // Limited 10 messages for testing
 const MESSAGE_EXPIRY = 5 * 60 * 1000  // 5 minutes
 
 const ChatBox = () => {
@@ -13,17 +14,23 @@ const ChatBox = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Load saved messages and clean old ones
+  // Fixed: Parse dates properly when loading messages
   useEffect(() => {
     const saved = localStorage.getItem('chat-messages')
     if (saved) {
       try {
         let savedMessages = JSON.parse(saved) as Message[]
         
+        // Convert string dates back to Date objects
+        savedMessages = savedMessages.map(msg => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }))
+        
         // Remove expired messages
         const now = new Date().getTime()
         savedMessages = savedMessages.filter(msg => {
-          const msgTime = new Date(msg.timestamp).getTime()
+          const msgTime = msg.timestamp.getTime()
           return now - msgTime < MESSAGE_EXPIRY
         })
 
@@ -40,10 +47,12 @@ const ChatBox = () => {
     }
   }, [])
 
-  // Save to localStorage
+  // Save messages when they change
   useEffect(() => {
-    const msgsToSave = messages.slice(-MAX_MESSAGES)
-    localStorage.setItem('chat-messages', JSON.stringify(msgsToSave))
+    if (messages.length > 0) {  // Only save if we have messages
+      const msgsToSave = messages.slice(-MAX_MESSAGES)
+      localStorage.setItem('chat-messages', JSON.stringify(msgsToSave))
+    }
   }, [messages])
 
   const handleSendMessage = async (text: string) => {
@@ -75,16 +84,16 @@ const ChatBox = () => {
     setIsLoading(false)
   }
 
-  const clearChat = () => {
-    setMessages([])
-    localStorage.removeItem('chat-messages')
-  }
-
   return (
     <div className="chat-box">
       <div className="chat-header">
         <h2>Mini Chatbot</h2>
-        <button onClick={clearChat} className="clear-btn">Clear</button>
+        <button onClick={() => {
+          setMessages([])
+          localStorage.removeItem('chat-messages')
+        }} className="clear-btn">
+          Clear
+        </button>
       </div>
       <MessageList messages={messages} />
       {error && <div className="error">{error}</div>}
