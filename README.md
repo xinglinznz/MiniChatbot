@@ -42,12 +42,13 @@ Frontend (React)  <-->  Backend (Express)  <-->  Dialogflow (NLP Engine)
                           |
                     LocalStorage (chat history)
 
-## Detailed Workflow
-Frontend captures user input and calls /send-text API.
-Backend forwards input to Dialogflow and retrieves response.
-Frontend displays chatbot’s reply and stores history in LocalStorage.
+---
+### Detailed Workflow
+Frontend captures user input and sends it to the /send-text API.
+Backend forwards the input to Dialogflow and retrieves the response.
+Frontend displays the chatbot’s reply and stores the conversation history in LocalStorage.
 
-## How to Run
+### How to Run
 1. Clone the Repository
 git clone https://github.com/xinglinznz/MiniChatbot.git
 cd mini-chatbot
@@ -63,7 +64,7 @@ npm install
 npm start
 
 3. Set Up Environment Variables
-Create a .env file in /backend folder:
+Create a .env file in /backend folder with the following content:
 GOOGLE_CLOUD_PROJECT_ID=ai-chatbot-447521
 GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 
@@ -71,8 +72,8 @@ GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 Frontend: http://localhost:5174
 Backend Test Endpoint: http://localhost:3001/test
 
-## How to Test
-API Testing (Postman Example)：
+### How to Test
+API Testing (Postman Example)
 
 POST /send-text
 Content-Type: application/json
@@ -81,41 +82,72 @@ Content-Type: application/json
     "message": "Hello"
 }
 
-Frontend Testing：
-Open the chatbot interface, enter a message, and see the bot's reply.
-Use the Clear button to reset chat history.
-
-## Edge Cases Considered
+### Frontend Testing
+Open the chatbot interface.
+Enter a message and observe the chatbot’s reply.
+Use the Clear button to reset the chat history.
+Edge Cases Considered
 Prevent sending empty messages.
-Display user-friendly error messages when server is down.
+Display user-friendly error messages when the server is down or the response fails.
 
-## Key Features
+### Key Features
 Text-based chatbot with Dialogflow NLP integration.
 Supports multi-turn conversations with context awareness.
-Persists chat history across page reloads (via LocalStorage).
-Limits history to last 10 messages to balance performance and usability.
+Chat history is persisted across page reloads using LocalStorage.
+History is capped at 10 messages to maintain performance.
 
-## Challenges & Solutions
+### Challenges & Solutions
 1. Dialogflow Setup
-- Faced project ID and credential mismatch during initial setup.
-- Resolved by thoroughly reviewing Dialogflow documentation and adjusting .env.
+Faced initial setup errors due to incorrect project IDs and credential mismatches.
+Solution: Carefully reviewed Dialogflow documentation and corrected .env configuration.
 
 2. Frontend-Backend Communication
-- Fixed CORS issues using appropriate middleware in Express.
-- LocalStorage Management
-- Implemented chat history capping to last 10 messages for better performance.
+Encountered CORS issues during development.
+Solution: Added proper CORS headers using Express middleware.
 
-3. Learnings & Takeaways
-- Dialogflow intent management and API integration.
-- Improved handling of frontend-backend API flow.
-- Learned to systematically debug and test APIs with Postman.
-- Enhanced understanding of React component lifecycle and state management.
+3. LocalStorage Management
+Challenge: Unlimited chat history would degrade performance over time.
+Solution: Added logic to limit chat history to the latest 10 messages for performance and usability.
 
-## Future Plans
-- Add voice interaction (Speech-to-Text and Text-to-Speech).
-- Introduce character-based role-playing for mental health scenarios.
-- Explore emotion detection using sentiment analysis.
-- Prepare for commercial-grade development focused on emotional well-being support.
+### Reflection and Learnings
+1. Dialogflow Integration
+Learned to create and manage intents and set up context handling.
+Gained hands-on experience in working with pre-trained NLP models.
+Frontend-Backend Communication
+Strengthened understanding of RESTful API design and integration.
+Gained experience debugging real-time communication issues (like CORS).
+
+2. Error Handling
+Implemented robust handling for:
+Empty messages
+Network failures
+Unexpected responses from Dialogflow
+
+3. New Technologies
+Gained practical understanding of:
+React’s component lifecycle and state management
+Fullstack integration using Express as the backend service layer
+Systematic API testing using Postman
+
+### Future Plans
+1. Voice Interaction
+Add support for:
+Speech-to-Text (user can talk to the bot)
+Text-to-Speech (bot can reply with voice)
+
+2. Role-Playing Scenarios
+Design predefined character personalities to enable role-playing conversations for:
+Educational scenarios
+Mental health simulation and guidance
+
+3. Emotion Detection
+Explore sentiment analysis to allow chatbot to adjust tone and content based on user emotions.
+
+4. Commercial Development
+Long-term goal: evolve into a commercial-grade mental health virtual assistant, combining:
+Conversational AI
+Emotional intelligence
+Adaptive responses based on context and history
 
 
 
